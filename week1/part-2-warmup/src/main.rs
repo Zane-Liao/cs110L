@@ -1,6 +1,7 @@
 /* The following exercises were borrowed from Will Crichton's CS 242 Rust lab. */
 
 use std::{arch::x86_64, collections::HashSet};
+use std::num::ParseIntError;
 
 fn main() {
     println!("Hi! Try running \"cargo test\" to run tests.");
@@ -25,21 +26,22 @@ fn add_n_inplace(v: &mut Vec<i32>, n: i32) {
 }
 
 fn dedup(v: &mut Vec<i32>) {
-   let mut dict = HashSet::new();
-   let mut new_v = Vec::new();
-   for i in 0..v.len() {
-    if dict.contains(&v[i]) {
-        continue;
-    } else {
-        dict.insert(v[i]);
-        new_v.push(v[i]);
+    let mut dict = HashSet::new();
+    let mut new_v = Vec::new();
+    for i in 0..v.len() {
+        if dict.contains(&v[i]) {
+            continue;
+        } else {
+            dict.insert(v[i]);
+            new_v.push(v[i]);
+        }
     }
-   }
-   v.clear();
-   for i in 0..new_v.len() {
-    v.push(new_v[i])
-   } 
+    v.clear();
+    for i in 0..new_v.len() {
+        v.push(new_v[i])
+    }
 }
+
 #[cfg(test)]
 mod test {
     use super::*;

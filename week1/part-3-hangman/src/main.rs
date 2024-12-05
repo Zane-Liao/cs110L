@@ -14,6 +14,7 @@
 // more in depth in the coming lectures.
 extern crate rand;
 use rand::Rng;
+use std::cmp;
 use std::fs;
 use std::io;
 use std::io::Write;
@@ -34,7 +35,50 @@ fn main() {
     // secret_word by doing secret_word_chars[i].
     let secret_word_chars: Vec<char> = secret_word.chars().collect();
     // Uncomment for debugging:
-    // println!("random word: {}", secret_word);
-
     // Your code here! :)
+    println!("Welcome to CS110L Hangman!");
+
+    loop {
+        let mut guess = String::new();
+        
+        io::stdin()
+        .read_line(&mut guess)
+        .expect("");
+
+        println!("The word so far is: {}", sequence_with_char(&secret_word, &guess));
+        println!("You have guessed the following letters: {}", guess);
+        
+        println!("Please guess a letter: {:?}", secret_word_chars.iter().next());
+
+        println!("random word: {}", secret_word);
+
+        if secret_word == guess {
+            println!("You have {} guesses left ", NUM_INCORRECT_GUESSES-1);
+        } else if NUM_INCORRECT_GUESSES < 1 && secret_word != guess{
+            println!("Sorry, you ran out of guesses!");
+            break;
+        } else {
+            println!("Sorry, that letter is not in the word");
+        }
+
+        let guess = guess.chars().next().unwrap();
+
+
+        match guess.cmp(&secret_word_chars.iter().next().unwrap()) {
+            cmp::Ordering::Less    => println!("Too small!"),
+            cmp::Ordering::Greater => println!("Too big!"),
+            cmp::Ordering::Equal   => {
+                println!("Congratulations you guessed the secret word: {}", secret_word);
+                break;
+            }
+        }
+    }
+}
+
+fn sequence_with_char(s: &str, c: &String) -> String {
+    let mut result = "-".repeat(s.len());
+    let mid    = s.len() / 2;
+
+    result.replace_range(mid..mid+1, &c);
+    result
 }
